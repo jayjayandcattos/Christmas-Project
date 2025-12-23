@@ -4,6 +4,7 @@
   overflow: hidden;
   cursor: grab;
   min-height: 100vh;
+  background: #000000;
 }
 
 .circular-gallery:active {

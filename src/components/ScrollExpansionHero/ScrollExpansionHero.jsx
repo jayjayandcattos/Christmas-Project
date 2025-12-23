@@ -9,14 +9,21 @@ export default function ScrollExpansionHero() {
   const containerRef = useRef(null);
   const textRef = useRef(null);
   const subtitleRef = useRef(null);
+  const iceCrack1Ref = useRef(null);
+  const iceCrack2Ref = useRef(null);
 
   useEffect(() => {
     const container = containerRef.current;
     const text = textRef.current;
     const subtitle = subtitleRef.current;
+    const iceCrack1 = iceCrack1Ref.current;
+    const iceCrack2 = iceCrack2Ref.current;
 
-    gsap.set(text, { scale: 0.5, opacity: 0 });
-    gsap.set(subtitle, { y: 30, opacity: 0 });
+    // Initial states
+    gsap.set(text, { scale: 0.6, opacity: 0 });
+    gsap.set(subtitle, { y: 40, opacity: 0 });
+    gsap.set(iceCrack1, { opacity: 0, scale: 0.9 });
+    gsap.set(iceCrack2, { opacity: 0, scale: 0.85 });
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -29,6 +36,7 @@ export default function ScrollExpansionHero() {
       }
     });
 
+    // Text expansion animation
     tl.to(text, {
       scale: 1,
       opacity: 1,
@@ -40,13 +48,35 @@ export default function ScrollExpansionHero() {
       opacity: 1,
       duration: 0.5,
       ease: 'power1.out'
+    }, '-=0.5')
+    // Ice cracks appear with slower parallax (appear after text)
+    .to(iceCrack1, {
+      opacity: 0.7,
+      scale: 1,
+      y: -15, // Slower movement = parallax effect
+      duration: 1,
+      ease: 'power1.out'
     }, '-=0.3')
+    .to(iceCrack2, {
+      opacity: 0.5,
+      scale: 1,
+      y: -25, // Even slower = deeper parallax
+      duration: 1,
+      ease: 'power1.out'
+    }, '-=0.8')
+    // Final fade
     .to([text, subtitle], {
-      opacity: 0.3,
-      scale: 1.1,
-      duration: 0.5,
+      opacity: 0.2,
+      scale: 1.15,
+      duration: 0.6,
       ease: 'power1.in'
-    });
+    })
+    .to([iceCrack1, iceCrack2], {
+      opacity: 0.9,
+      scale: 1.1,
+      duration: 0.6,
+      ease: 'power1.in'
+    }, '-=0.6');
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -64,15 +94,13 @@ export default function ScrollExpansionHero() {
           A journey through warmth and wonder
         </p>
       </div>
-      <div className="hero-overlay"></div>
-      <div className="snowflakes" aria-hidden="true">
-        {[...Array(20)].map((_, i) => (
-          <div key={i} className="snowflake" style={{
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${5 + Math.random() * 10}s`
-          }}>❄</div>
-        ))}
+      
+      {/* Ice crack overlays - FOREGROUND layer above content */}
+      <div ref={iceCrack1Ref} className="ice-crack ice-crack-1">
+        <img src="/ice-crack-1.png" alt="" aria-hidden="true" />
+      </div>
+      <div ref={iceCrack2Ref} className="ice-crack ice-crack-2">
+        <img src="/ice-crack-2.png" alt="" aria-hidden="true" />
       </div>
     </section>
   );

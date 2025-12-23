@@ -1,98 +1,174 @@
-import { useRef, useMemo, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, Text3D, Center } from '@react-three/drei';
+/* eslint-disable react/no-unknown-property */
+import { useEffect, useRef, useState } from 'react';
+import { Canvas, extend, useFrame } from '@react-three/fiber';
+import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
+import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
+import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 import './Lanyard.css';
 
-function SwayingCard() {
-  const groupRef = useRef();
-  const time = useRef(0);
+extend({ MeshLineGeometry, MeshLineMaterial });
 
-  useFrame((state, delta) => {
-    time.current += delta;
-    if (groupRef.current) {
-      groupRef.current.rotation.z = Math.sin(time.current * 0.5) * 0.1;
-      groupRef.current.rotation.x = Math.sin(time.current * 0.3) * 0.05;
-      groupRef.current.position.y = Math.sin(time.current * 0.4) * 0.1;
-    }
-  });
+// Exact ReactBits Lanyard component structure
+export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true }) {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
-  return (
-    <group ref={groupRef}>
-      <mesh position={[0, 2, 0]}>
-        <cylinderGeometry args={[0.05, 0.05, 0.5, 8]} />
-        <meshStandardMaterial color="#c41e3a" />
-      </mesh>
-      
-      <Line start={[0, 1.75, 0]} end={[0, 0.5, 0]} />
-      
-      <group position={[0, -0.5, 0]}>
-        <mesh>
-          <boxGeometry args={[1.6, 2.2, 0.05]} />
-          <meshStandardMaterial color="#1a1a2e" metalness={0.3} roughness={0.7} />
-        </mesh>
-        
-        <mesh position={[0, 0.6, 0.03]}>
-          <circleGeometry args={[0.35, 32]} />
-          <meshStandardMaterial color="#2d5a27" />
-        </mesh>
-        
-        <mesh position={[0, 0.6, 0.04]}>
-          <ringGeometry args={[0.28, 0.35, 32]} />
-          <meshStandardMaterial color="#c41e3a" />
-        </mesh>
-        
-        <mesh position={[0, -0.2, 0.03]}>
-          <planeGeometry args={[1.2, 0.15]} />
-          <meshStandardMaterial color="#d4af37" />
-        </mesh>
-        
-        <mesh position={[0, -0.5, 0.03]}>
-          <planeGeometry args={[1, 0.1]} />
-          <meshStandardMaterial color="#ffffff" opacity={0.8} transparent />
-        </mesh>
-        
-        <mesh position={[0, -0.75, 0.03]}>
-          <planeGeometry args={[0.8, 0.08]} />
-          <meshStandardMaterial color="#ffffff" opacity={0.5} transparent />
-        </mesh>
-      </group>
-    </group>
-  );
-}
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-function Line({ start, end }) {
-  const ref = useRef();
-  
-  const geometry = useMemo(() => {
-    const points = [new THREE.Vector3(...start), new THREE.Vector3(...end)];
-    return new THREE.BufferGeometry().setFromPoints(points);
-  }, [start, end]);
-
-  return (
-    <line ref={ref} geometry={geometry}>
-      <lineBasicMaterial color="#c41e3a" linewidth={2} />
-    </line>
-  );
-}
-
-export default function Lanyard() {
   return (
     <section className="lanyard-section" id="footer">
       <div className="lanyard-wrapper">
-        <Canvas camera={{ position: [0, 0, 5], fov: 50 }} gl={{ alpha: true }}>
-          <ambientLight intensity={0.6} />
-          <pointLight position={[5, 5, 5]} intensity={1} />
-          <pointLight position={[-5, 5, 5]} intensity={0.5} color="#c41e3a" />
-          <SwayingCard />
-          <Environment preset="city" />
+        <Canvas
+          camera={{ position: position, fov: fov }}
+          dpr={[1, isMobile ? 1.5 : 2]}
+          gl={{ alpha: transparent }}
+          onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+        >
+          <ambientLight intensity={Math.PI} />
+          <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
+            <Band isMobile={isMobile} />
+          </Physics>
+          <Environment blur={0.75}>
+            <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+            <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+            <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+            <Lightformer intensity={10} color="white" position={[-10, 0, 14]} rotation={[0, Math.PI / 2, Math.PI / 3]} scale={[100, 10, 1]} />
+          </Environment>
         </Canvas>
       </div>
       
-      <div className="lanyard-credits">
-        <p className="credits-text">Made with ❤️ for Christmas 2024</p>
-        <p className="credits-subtext">Wishing you warmth and joy this holiday season</p>
+      {/* Meet the Developer section */}
+      <div className="developer-section">
+        <h3 className="developer-title">Meet the Developer</h3>
+        <p className="developer-name">Justin</p>
+        <p className="developer-role">Creative Frontend Engineer</p>
       </div>
     </section>
+  );
+}
+
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
+  const band = useRef();
+  const fixed = useRef();
+  const j1 = useRef();
+  const j2 = useRef();
+  const j3 = useRef();
+  const card = useRef();
+  
+  const vec = new THREE.Vector3();
+  const ang = new THREE.Vector3();
+  const rot = new THREE.Vector3();
+  const dir = new THREE.Vector3();
+  
+  const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
+  
+  const [curve] = useState(
+    () => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
+  );
+  const [dragged, drag] = useState(false);
+  const [hovered, hover] = useState(false);
+
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
+  useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.5, 0]]);
+
+  useEffect(() => {
+    if (hovered) {
+      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
+      return () => void (document.body.style.cursor = 'auto');
+    }
+  }, [hovered, dragged]);
+
+  useFrame((state, delta) => {
+    if (dragged) {
+      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
+      dir.copy(vec).sub(state.camera.position).normalize();
+      vec.add(dir.multiplyScalar(state.camera.position.length()));
+      [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
+      card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
+    }
+    if (fixed.current) {
+      [j1, j2].forEach(ref => {
+        if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
+        const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
+        ref.current.lerped.lerp(ref.current.translation(), delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)));
+      });
+      curve.points[0].copy(j3.current.translation());
+      curve.points[1].copy(j2.current.lerped);
+      curve.points[2].copy(j1.current.lerped);
+      curve.points[3].copy(fixed.current.translation());
+      band.current.geometry.setPoints(curve.getPoints(isMobile ? 16 : 32));
+      ang.copy(card.current.angvel());
+      rot.copy(card.current.rotation());
+      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+    }
+  });
+
+  curve.curveType = 'chordal';
+
+  return (
+    <>
+      <group position={[0, 4, 0]}>
+        <RigidBody ref={fixed} {...segmentProps} type="fixed" />
+        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
+          <BallCollider args={[0.1]} />
+        </RigidBody>
+        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
+          <BallCollider args={[0.1]} />
+        </RigidBody>
+        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
+          <BallCollider args={[0.1]} />
+        </RigidBody>
+        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+          <CuboidCollider args={[0.8, 1.125, 0.01]} />
+          <group
+            scale={2.25}
+            position={[0, -1.2, -0.05]}
+            onPointerOver={() => hover(true)}
+            onPointerOut={() => hover(false)}
+            onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
+            onPointerDown={e => (
+              e.target.setPointerCapture(e.pointerId),
+              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
+            )}
+          >
+            {/* ID Card with photo placeholder */}
+            <mesh>
+              <boxGeometry args={[0.7, 1, 0.02]} />
+              <meshPhysicalMaterial color="#111111" metalness={0.4} roughness={0.6} clearcoat={isMobile ? 0 : 0.5} />
+            </mesh>
+            {/* Photo area */}
+            <mesh position={[0, 0.2, 0.02]}>
+              <planeGeometry args={[0.4, 0.4]} />
+              <meshStandardMaterial color="#333333" />
+            </mesh>
+            {/* Name bar */}
+            <mesh position={[0, -0.15, 0.02]}>
+              <planeGeometry args={[0.5, 0.08]} />
+              <meshStandardMaterial color="#ff1744" />
+            </mesh>
+            {/* Role bar */}
+            <mesh position={[0, -0.28, 0.02]}>
+              <planeGeometry args={[0.45, 0.05]} />
+              <meshStandardMaterial color="#ffffff" opacity={0.8} transparent />
+            </mesh>
+            {/* Clip */}
+            <mesh position={[0, 0.55, 0]}>
+              <boxGeometry args={[0.15, 0.1, 0.03]} />
+              <meshStandardMaterial color="#666666" metalness={0.9} roughness={0.1} />
+            </mesh>
+          </group>
+        </RigidBody>
+      </group>
+      <mesh ref={band}>
+        <meshLineGeometry />
+        <meshLineMaterial color="#ff1744" depthTest={false} resolution={isMobile ? [1000, 2000] : [1000, 1000]} lineWidth={1} />
+      </mesh>
+    </>
   );
 }

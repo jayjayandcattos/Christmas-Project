@@ -9,6 +9,7 @@
   --rot-x: calc((360deg / var(--segments-y)) / 2);
   --item-width: calc(var(--circ) / var(--segments-x));
   --item-height: calc(var(--circ) / var(--segments-y));
+  background: #000000;
 }
 
 .sphere-root * {
@@ -55,12 +56,12 @@ main.sphere-main {
 }
 
 .overlay {
-  background-image: radial-gradient(rgba(235, 235, 235, 0) 65%, var(--overlay-blur-color, #0a1628) 100%);
+  background-image: radial-gradient(rgba(0, 0, 0, 0) 65%, #000000 100%);
 }
 
 .overlay--blur {
-  -webkit-mask-image: radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, #0a1628) 90%);
-  mask-image: radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, #0a1628) 90%);
+  -webkit-mask-image: radial-gradient(rgba(0, 0, 0, 0) 70%, #000000 90%);
+  mask-image: radial-gradient(rgba(0, 0, 0, 0) 70%, #000000 90%);
   backdrop-filter: blur(3px);
 }
 
@@ -86,7 +87,7 @@ main.sphere-main {
   position: absolute;
   display: block;
   inset: 10px;
-  border-radius: var(--tile-radius, 12px);
+  border-radius: var(--tile-radius, 8px);
   background: transparent;
   overflow: hidden;
   backface-visibility: hidden;
@@ -118,7 +119,7 @@ main.sphere-main {
   height: 120px;
   z-index: 5;
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent, var(--overlay-blur-color, #0a1628));
+  background: linear-gradient(to bottom, transparent, #000000);
 }
 
 .edge-fade--top {

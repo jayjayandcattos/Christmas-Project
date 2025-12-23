@@ -18,6 +18,7 @@ gsap.registerPlugin(ScrollTrigger);
 function App() {
   const [lenis, setLenis] = useState(null);
   const domeRef = useRef(null);
+  const domeWrapperRef = useRef(null);
   const galleryRef = useRef(null);
 
   useEffect(() => {
@@ -29,13 +30,8 @@ function App() {
     });
 
     setLenis(lenisInstance);
-
     lenisInstance.on('scroll', ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-      lenisInstance.raf(time * 1000);
-    });
-
+    gsap.ticker.add((time) => lenisInstance.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 
     return () => {
@@ -45,24 +41,26 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!domeRef.current) return;
-
-    gsap.fromTo(domeRef.current,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.5,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: domeRef.current,
-          start: 'top 80%',
-          end: 'top 20%',
-          toggleActions: 'play none none reverse',
+    // DomeGallery scroll-triggered opacity and transform
+    if (domeWrapperRef.current) {
+      gsap.fromTo(domeWrapperRef.current,
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.5,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: domeWrapperRef.current,
+            start: 'top 85%',
+            end: 'top 30%',
+            toggleActions: 'play none none reverse',
+          }
         }
-      }
-    );
+      );
+    }
 
+    // CircularGallery scroll-triggered opacity
     if (galleryRef.current) {
       gsap.fromTo(galleryRef.current,
         { opacity: 0 },
@@ -90,6 +88,7 @@ function App() {
       
       <ScrollExpansionHero />
 
+      {/* Festive Divider - transparent, text-only */}
       <div className="divider-section">
         <CurvedLoop 
           marqueeText="✦ Merry Christmas ✦ Happy Holidays ✦ Season's Greetings ✦ Joy & Peace " 
@@ -98,15 +97,16 @@ function App() {
         />
       </div>
 
-      <section ref={galleryRef} className="section section--gallery" id="gallery">
+      <section ref={galleryRef} className="section" id="gallery">
         <CircularGallery 
           bend={2}
-          textColor="#d4af37"
-          borderRadius={0.08}
+          textColor="#ff1744"
+          borderRadius={0.06}
           scrollSpeed={1.5}
         />
       </section>
 
+      {/* Festive Divider - transparent */}
       <div className="divider-section">
         <CurvedLoop 
           marqueeText="✦ Winter Wonderland ✦ Magical Moments ✦ Cherished Memories " 
@@ -116,16 +116,18 @@ function App() {
         />
       </div>
 
-      <section ref={domeRef} className="section section--dome" id="dome">
+      {/* DomeGallery with GSAP wrapper for opacity/transform */}
+      <section ref={domeWrapperRef} className="section" id="dome">
         <DomeGallery 
-          overlayBlurColor="#060010"
-          imageBorderRadius="12px"
+          overlayBlurColor="#000000"
+          imageBorderRadius="8px"
           grayscale={false}
           dragSensitivity={15}
         />
       </section>
 
-      <div className="divider-section" style={{ background: 'linear-gradient(180deg, #060010 0%, #0a1628 50%, #060010 100%)' }}>
+      {/* Festive Divider - transparent */}
+      <div className="divider-section">
         <CurvedLoop 
           marqueeText="✦ Countdown to Christmas ✦ The Most Wonderful Time ✦ " 
           speed={0.6}

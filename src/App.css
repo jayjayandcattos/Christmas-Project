@@ -1,0 +1,28 @@
+.app-container {
+  width: 100%;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.section {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section--gallery {
+  background: linear-gradient(180deg, var(--color-bg-warm, #1a0f0f) 0%, #0a1628 100%);
+}
+
+.section--dome {
+  background: linear-gradient(180deg, #0a1628 0%, #060010 100%);
+}
+
+.divider-section {
+  padding: 2rem 0;
+  background: transparent;
+  overflow: hidden;
+  position: relative;
+}

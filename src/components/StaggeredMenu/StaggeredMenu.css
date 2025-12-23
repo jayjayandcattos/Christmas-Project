@@ -1,0 +1,133 @@
+.menu-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  width: 50px;
+  height: 50px;
+  background: rgba(10, 22, 40, 0.9);
+  border: 1px solid rgba(196, 30, 58, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.menu-toggle:hover {
+  border-color: rgba(196, 30, 58, 0.6);
+  transform: scale(1.05);
+}
+
+.menu-line {
+  width: 20px;
+  height: 2px;
+  background: #f5f5f5;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.menu-toggle.active .menu-line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.active .menu-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.menu-toggle.active .menu-line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(5px);
+  transition: opacity 0.3s ease;
+}
+
+.menu-overlay.active {
+  pointer-events: auto;
+}
+
+.staggered-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 400px;
+  height: 100vh;
+  background: linear-gradient(180deg, rgba(10, 22, 40, 0.98) 0%, rgba(26, 15, 15, 0.98) 100%);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 1px solid rgba(196, 30, 58, 0.2);
+}
+
+.staggered-menu.active {
+  transform: translateX(0);
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  padding: 2rem;
+}
+
+.menu-item {
+  opacity: 0;
+  margin-bottom: 1rem;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  text-decoration: none;
+  color: #f5f5f5;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.menu-link:hover {
+  background: rgba(196, 30, 58, 0.1);
+  transform: translateX(10px);
+}
+
+.menu-number {
+  font-size: 0.875rem;
+  color: #d4af37;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.menu-label {
+  font-size: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .staggered-menu {
+    max-width: 100%;
+  }
+  
+  .menu-label {
+    font-size: 1.25rem;
+  }
+}

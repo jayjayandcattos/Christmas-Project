@@ -1,3 +1,5 @@
+/* Christmas Countdown - FESTIVE UPGRADE with green tree, colored lights, ornaments */
+
 .countdown-section {
   min-height: 100vh;
   display: flex;
@@ -77,6 +79,7 @@
   display: flex;
   justify-content: center;
   margin-top: 2rem;
+  transform: scale(1.4); /* SIZE FIX: 40% larger tree */
 }
 
 .tree {
@@ -84,66 +87,118 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  filter: drop-shadow(0 0 20px rgba(34, 139, 34, 0.3)); /* Warm glow around tree */
 }
 
+/* COLOR FIX: Golden star with warm glow */
 .star {
-  font-size: 2.5rem;
-  color: #ff1744;
-  text-shadow: 0 0 30px rgba(255, 23, 68, 0.8);
-  margin-bottom: -10px;
+  font-size: 3rem;
+  color: #ffd700;
+  text-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.9),
+    0 0 60px rgba(255, 215, 0, 0.5);
+  margin-bottom: -12px;
   z-index: 2;
 }
 
+/* COLOR FIX: Green tree layers (forest green) */
 .tree-layer {
   width: 0;
   height: 0;
   border-left: solid transparent;
   border-right: solid transparent;
-  border-bottom: solid #1a1a1a;
+  border-bottom: solid #228b22; /* Forest green */
   position: relative;
 }
 
 .tree-layer-1 {
-  border-left-width: 40px;
-  border-right-width: 40px;
-  border-bottom-width: 50px;
-  margin-bottom: -15px;
+  border-left-width: 50px; /* SIZE FIX: Increased from 40px */
+  border-right-width: 50px;
+  border-bottom-width: 60px; /* SIZE FIX: Increased from 50px */
+  margin-bottom: -20px;
 }
 
 .tree-layer-2 {
-  border-left-width: 60px;
-  border-right-width: 60px;
-  border-bottom-width: 60px;
-  margin-bottom: -15px;
+  border-left-width: 75px; /* SIZE FIX: Increased from 60px */
+  border-right-width: 75px;
+  border-bottom-width: 75px; /* SIZE FIX: Increased from 60px */
+  margin-bottom: -20px;
 }
 
 .tree-layer-3 {
-  border-left-width: 80px;
-  border-right-width: 80px;
-  border-bottom-width: 70px;
+  border-left-width: 100px; /* SIZE FIX: Increased from 80px */
+  border-right-width: 100px;
+  border-bottom-width: 85px; /* SIZE FIX: Increased from 70px */
 }
 
+/* COLOR FIX: Colored lights with warm glow */
 .light {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #ff1744;
-  box-shadow: 0 0 10px #ff1744, 0 0 20px #ff1744;
   top: 50%;
   transform: translateY(-50%);
+  transition: all 0.3s ease;
 }
 
-.light:nth-child(2n) {
-  background: #ffffff;
-  box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+.light-red {
+  background: #ff4444;
+  box-shadow: 
+    0 0 15px #ff4444,
+    0 0 30px rgba(255, 68, 68, 0.6);
 }
 
+.light-gold {
+  background: #ffd700;
+  box-shadow: 
+    0 0 15px #ffd700,
+    0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+.light-blue {
+  background: #4da6ff;
+  box-shadow: 
+    0 0 15px #4da6ff,
+    0 0 30px rgba(77, 166, 255, 0.6);
+}
+
+/* FESTIVE UPGRADE: Ornament decorations */
+.ornament {
+  position: absolute;
+  font-size: 1.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  animation: ornament-swing 3s ease-in-out infinite;
+}
+
+.ornament-red {
+  color: #ff4444;
+  filter: drop-shadow(0 0 8px rgba(255, 68, 68, 0.8));
+}
+
+.ornament-gold {
+  color: #ffd700;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+}
+
+.ornament-blue {
+  color: #4da6ff;
+  filter: drop-shadow(0 0 8px rgba(77, 166, 255, 0.8));
+}
+
+@keyframes ornament-swing {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-2deg); }
+  50% { transform: translate(-50%, -50%) rotate(2deg); }
+}
+
+/* COLOR FIX: Brown trunk */
 .trunk {
-  width: 20px;
-  height: 30px;
-  background: #333333;
+  width: 25px; /* SIZE FIX: Increased from 20px */
+  height: 35px; /* SIZE FIX: Increased from 30px */
+  background: #654321; /* Brown color */
   margin-top: 5px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 640px) {
@@ -154,4 +209,20 @@
   .countdown-timer {
     gap: 0.25rem;
   }
+  
+  .tree-container {
+    transform: scale(1.2); /* Slightly smaller on mobile */
+  }
 }
+
+/*
+FESTIVE UPGRADE FIXES:
+1. Tree is GREEN: #228b22 (forest green)
+2. Colored lights: .light-red (#ff4444), .light-gold (#ffd700), .light-blue (#4da6ff)
+3. Warm glow: Added box-shadow with color-matched glows
+4. Ornaments: Added .ornament decorations in matching colors with swing animation
+5. Larger tree: Increased all layer sizes by ~25%, scale(1.4) on container
+6. Golden star: #ffd700 with warm glow
+7. Brown trunk: #654321 (realistic brown)
+8. Tree has overall warm glow with filter: drop-shadow
+*/

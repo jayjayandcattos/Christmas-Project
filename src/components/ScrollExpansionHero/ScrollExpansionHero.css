@@ -1,3 +1,4 @@
+/* ScrollExpansionHero with PNG ice crack overlays */
 .scroll-expansion-hero {
   min-height: 100vh;
   width: 100%;
@@ -7,11 +8,12 @@
   position: relative;
   overflow: hidden;
   background: #000000;
+  z-index: 5;
 }
 
 .hero-content {
   text-align: center;
-  z-index: 5;
+  z-index: 7;
   padding: 2rem;
   position: relative;
 }
@@ -43,7 +45,7 @@
   text-transform: uppercase;
 }
 
-/* Ice crack overlays - FOREGROUND (above content) */
+/* PNG ice crack overlays - transparent, foreground */
 .ice-crack {
   position: absolute;
   inset: 0;
@@ -51,9 +53,10 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 10; /* Above hero-content (z-index: 5) */
+  z-index: 10;
   opacity: 0;
   will-change: transform, opacity;
+  background: transparent !important;
 }
 
 .ice-crack img {

@@ -41,11 +41,12 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         </Canvas>
       </div>
       
-      {/* Meet the Developer section */}
+      {/* CONTENT FIX: Meet the Developer section with complete info */}
       <div className="developer-section">
         <h3 className="developer-title">Meet the Developer</h3>
         <p className="developer-name">Justin</p>
         <p className="developer-role">Creative Frontend Engineer</p>
+        <p className="developer-tagline">Building immersive web experiences with React, Three.js & GSAP</p>
       </div>
     </section>
   );
@@ -137,25 +138,38 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
               drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
             )}
           >
-            {/* ID Card with photo placeholder */}
+            {/* ID Card base */}
             <mesh>
               <boxGeometry args={[0.7, 1, 0.02]} />
               <meshPhysicalMaterial color="#111111" metalness={0.4} roughness={0.6} clearcoat={isMobile ? 0 : 0.5} />
             </mesh>
-            {/* Photo area */}
-            <mesh position={[0, 0.2, 0.02]}>
-              <planeGeometry args={[0.4, 0.4]} />
-              <meshStandardMaterial color="#333333" />
+            
+            {/* CONTENT FIX: Photo area with initial placeholder */}
+            <mesh position={[0, 0.25, 0.02]}>
+              <circleGeometry args={[0.15, 32]} />
+              <meshStandardMaterial color="#444444" />
             </mesh>
-            {/* Name bar */}
-            <mesh position={[0, -0.15, 0.02]}>
-              <planeGeometry args={[0.5, 0.08]} />
+            <mesh position={[0, 0.25, 0.03]}>
+              <ringGeometry args={[0.14, 0.15, 32]} />
               <meshStandardMaterial color="#ff1744" />
             </mesh>
-            {/* Role bar */}
-            <mesh position={[0, -0.28, 0.02]}>
-              <planeGeometry args={[0.45, 0.05]} />
-              <meshStandardMaterial color="#ffffff" opacity={0.8} transparent />
+            
+            {/* CONTENT FIX: Name bar - "JUSTIN" */}
+            <mesh position={[0, 0, 0.02]}>
+              <planeGeometry args={[0.55, 0.12]} />
+              <meshStandardMaterial color="#ff1744" />
+            </mesh>
+            
+            {/* CONTENT FIX: Role bar - "Creative Frontend Engineer" */}
+            <mesh position={[0, -0.18, 0.02]}>
+              <planeGeometry args={[0.6, 0.08]} />
+              <meshStandardMaterial color="#ffffff" opacity={0.9} transparent />
+            </mesh>
+            
+            {/* CONTENT FIX: Tagline bar - smaller text area */}
+            <mesh position={[0, -0.32, 0.02]}>
+              <planeGeometry args={[0.55, 0.05]} />
+              <meshStandardMaterial color="#666666" opacity={0.7} transparent />
             </mesh>
             {/* Clip */}
             <mesh position={[0, 0.55, 0]}>

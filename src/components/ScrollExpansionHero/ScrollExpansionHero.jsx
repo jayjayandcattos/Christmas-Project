@@ -49,18 +49,18 @@ export default function ScrollExpansionHero() {
       duration: 0.5,
       ease: 'power1.out'
     }, '-=0.5')
-    // Ice cracks appear with slower parallax (appear after text)
+    // Ice cracks appear with slower parallax
     .to(iceCrack1, {
       opacity: 0.7,
-      scale: 1,
-      y: -15, // Slower movement = parallax effect
+      scale: 1.05,
+      y: -15,
       duration: 1,
       ease: 'power1.out'
     }, '-=0.3')
     .to(iceCrack2, {
       opacity: 0.5,
-      scale: 1,
-      y: -25, // Even slower = deeper parallax
+      scale: 1.1,
+      y: -25,
       duration: 1,
       ease: 'power1.out'
     }, '-=0.8')
@@ -73,7 +73,7 @@ export default function ScrollExpansionHero() {
     })
     .to([iceCrack1, iceCrack2], {
       opacity: 0.9,
-      scale: 1.1,
+      scale: 1.2,
       duration: 0.6,
       ease: 'power1.in'
     }, '-=0.6');
@@ -95,7 +95,7 @@ export default function ScrollExpansionHero() {
         </p>
       </div>
       
-      {/* Ice crack overlays - FOREGROUND layer above content */}
+      {/* PNG ice crack overlays - FOREGROUND layer above content */}
       <div ref={iceCrack1Ref} className="ice-crack ice-crack-1">
         <img src="/ice-crack-1.png" alt="" aria-hidden="true" />
       </div>

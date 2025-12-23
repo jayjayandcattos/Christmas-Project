@@ -40,24 +40,42 @@ function Snowfall({ count = 200 }) {
   );
 }
 
+// FESTIVE UPGRADE: Green tree with colored lights and ornaments
 function AnimatedTree() {
   const treeRef = useRef();
   const starRef = useRef();
   const lightsRef = useRef([]);
 
   useEffect(() => {
+    // Animate lights with warm glow
     if (lightsRef.current.length > 0) {
       gsap.to(lightsRef.current, {
-        opacity: 0.3,
-        stagger: { each: 0.2, repeat: -1, yoyo: true },
-        duration: 0.8,
+        opacity: 0.4, // Reduced for subtle glow
+        stagger: { each: 0.15, repeat: -1, yoyo: true },
+        duration: 1.2,
         ease: 'sine.inOut'
       });
+      
+      // Warm glow pulsing
+      lightsRef.current.forEach((light, i) => {
+        if (light) {
+          gsap.to(light, {
+            scale: 1.2,
+            duration: 0.8 + Math.random() * 0.4,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: i * 0.1
+          });
+        }
+      });
     }
+    
+    // Animate star
     if (starRef.current) {
       gsap.to(starRef.current, {
-        scale: 1.2,
-        duration: 1.5,
+        scale: 1.3,
+        duration: 1.8,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut'
@@ -68,22 +86,46 @@ function AnimatedTree() {
   return (
     <div className="tree-container" ref={treeRef}>
       <div className="tree">
+        {/* Golden star */}
         <div className="star" ref={starRef}>★</div>
+        
+        {/* SIZE FIX: Larger tree layers */}
         <div className="tree-layer tree-layer-1">
-          <div className="light" ref={el => lightsRef.current[0] = el} style={{ left: '30%' }}></div>
-          <div className="light" ref={el => lightsRef.current[1] = el} style={{ left: '70%' }}></div>
+          <div className="light light-red" ref={el => lightsRef.current[0] = el} style={{ left: '25%' }}></div>
+          <div className="light light-gold" ref={el => lightsRef.current[1] = el} style={{ left: '50%' }}></div>
+          <div className="light light-blue" ref={el => lightsRef.current[2] = el} style={{ left: '75%' }}></div>
+          {/* Ornaments */}
+          <div className="ornament ornament-red" style={{ left: '35%', top: '50%' }}>●</div>
+          <div className="ornament ornament-gold" style={{ left: '65%', top: '50%' }}>●</div>
         </div>
+        
         <div className="tree-layer tree-layer-2">
-          <div className="light" ref={el => lightsRef.current[2] = el} style={{ left: '20%' }}></div>
-          <div className="light" ref={el => lightsRef.current[3] = el} style={{ left: '50%' }}></div>
-          <div className="light" ref={el => lightsRef.current[4] = el} style={{ left: '80%' }}></div>
+          <div className="light light-blue" ref={el => lightsRef.current[3] = el} style={{ left: '15%' }}></div>
+          <div className="light light-red" ref={el => lightsRef.current[4] = el} style={{ left: '35%' }}></div>
+          <div className="light light-gold" ref={el => lightsRef.current[5] = el} style={{ left: '50%' }}></div>
+          <div className="light light-red" ref={el => lightsRef.current[6] = el} style={{ left: '65%' }}></div>
+          <div className="light light-blue" ref={el => lightsRef.current[7] = el} style={{ left: '85%' }}></div>
+          {/* Ornaments */}
+          <div className="ornament ornament-blue" style={{ left: '25%', top: '50%' }}>●</div>
+          <div className="ornament ornament-red" style={{ left: '50%', top: '60%' }}>●</div>
+          <div className="ornament ornament-gold" style={{ left: '75%', top: '50%' }}>●</div>
         </div>
+        
         <div className="tree-layer tree-layer-3">
-          <div className="light" ref={el => lightsRef.current[5] = el} style={{ left: '15%' }}></div>
-          <div className="light" ref={el => lightsRef.current[6] = el} style={{ left: '40%' }}></div>
-          <div className="light" ref={el => lightsRef.current[7] = el} style={{ left: '65%' }}></div>
-          <div className="light" ref={el => lightsRef.current[8] = el} style={{ left: '85%' }}></div>
+          <div className="light light-gold" ref={el => lightsRef.current[8] = el} style={{ left: '10%' }}></div>
+          <div className="light light-blue" ref={el => lightsRef.current[9] = el} style={{ left: '25%' }}></div>
+          <div className="light light-red" ref={el => lightsRef.current[10] = el} style={{ left: '40%' }}></div>
+          <div className="light light-gold" ref={el => lightsRef.current[11] = el} style={{ left: '55%' }}></div>
+          <div className="light light-blue" ref={el => lightsRef.current[12] = el} style={{ left: '70%' }}></div>
+          <div className="light light-red" ref={el => lightsRef.current[13] = el} style={{ left: '90%' }}></div>
+          {/* Ornaments */}
+          <div className="ornament ornament-gold" style={{ left: '20%', top: '50%' }}>●</div>
+          <div className="ornament ornament-blue" style={{ left: '45%', top: '60%' }}>●</div>
+          <div className="ornament ornament-red" style={{ left: '65%', top: '50%' }}>●</div>
+          <div className="ornament ornament-gold" style={{ left: '80%', top: '55%' }}>●</div>
         </div>
+        
+        {/* Brown trunk */}
         <div className="trunk"></div>
       </div>
     </div>
@@ -170,3 +212,14 @@ export default function ChristmasCountdown() {
     </section>
   );
 }
+
+/*
+FESTIVE UPGRADE FIXES:
+1. Tree is now GREEN (forest green in CSS)
+2. Added COLORED lights: red, gold, blue with warm glow
+3. Added ornament decorations (●) in multiple colors
+4. Increased tree size (larger layers)
+5. Enhanced light animation with scale pulsing
+6. Golden star at top
+7. Brown trunk for realism
+*/

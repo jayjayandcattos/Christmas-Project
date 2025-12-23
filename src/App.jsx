@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import Aurora from './components/Aurora/Aurora';
 import ScrollExpansionHero from './components/ScrollExpansionHero/ScrollExpansionHero';
 import CircularGallery from './components/CircularGallery/CircularGallery';
 import DomeGallery from './components/DomeGallery/DomeGallery';
@@ -17,7 +18,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [lenis, setLenis] = useState(null);
-  const domeRef = useRef(null);
   const domeWrapperRef = useRef(null);
   const galleryRef = useRef(null);
 
@@ -41,7 +41,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // DomeGallery scroll-triggered opacity and transform
+    // DomeGallery scroll-triggered opacity and transform (GSAP wrapper per user spec)
     if (domeWrapperRef.current) {
       gsap.fromTo(domeWrapperRef.current,
         { opacity: 0, y: 60 },
@@ -84,6 +84,14 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Aurora background: red tones, low opacity, behind all content, above black base */}
+      <Aurora 
+        colorStops={['#ff0844', '#ff1744', '#d50000']} // Red aurora tones only
+        amplitude={0.8}
+        blend={0.7}
+        speed={0.5}
+      />
+      
       <StaggeredMenu lenis={lenis} />
       
       <ScrollExpansionHero />
@@ -116,13 +124,14 @@ function App() {
         />
       </div>
 
-      {/* DomeGallery with GSAP wrapper for opacity/transform */}
+      {/* DomeGallery with GSAP wrapper for opacity/transform, scaled larger */}
       <section ref={domeWrapperRef} className="section" id="dome">
         <DomeGallery 
           overlayBlurColor="#000000"
           imageBorderRadius="8px"
           grayscale={false}
           dragSensitivity={15}
+          fit={0.6} 
         />
       </section>
 

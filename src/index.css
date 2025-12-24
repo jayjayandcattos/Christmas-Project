@@ -93,3 +93,8 @@ h1, h2, h3, h4, h5, h6 {
 .bg-black {
   background: #000000;
 }
+
+/* Scroll lock for DomeGallery image enlargement */
+body.dg-scroll-lock {
+  overflow: hidden;
+}

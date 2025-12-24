@@ -41,19 +41,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // DomeGallery scroll-triggered opacity and transform (GSAP wrapper per user spec)
+    // CAUSE: GSAP was setting opacity: 0 initially, making gallery invisible until scroll
+    // FIX: Remove opacity animation, keep only y-transform for subtle scroll effect
     if (domeWrapperRef.current) {
       gsap.fromTo(domeWrapperRef.current,
-        { opacity: 0, y: 60 },
+        { y: 40 },
         {
-          opacity: 1,
           y: 0,
-          duration: 1.5,
+          duration: 1.2,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: domeWrapperRef.current,
-            start: 'top 85%',
-            end: 'top 30%',
+            start: 'top 90%',
+            end: 'top 40%',
             toggleActions: 'play none none reverse',
           }
         }

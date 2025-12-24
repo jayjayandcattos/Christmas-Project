@@ -5,13 +5,17 @@
   background: #000000;
 }
 
+/* CAUSE: Flex container without explicit height causes child height: 100% to fail
+   FIX: Add height: 100vh so percentage-based child heights work */
 .section {
   min-height: 100vh;
+  height: 100vh;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #000000;
+  overflow: hidden;
 }
 
 .divider-section {

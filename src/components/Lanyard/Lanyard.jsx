@@ -1,188 +1,190 @@
-/* eslint-disable react/no-unknown-property */
-import { useEffect, useRef, useState } from 'react';
-import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
-import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
-import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
-import * as THREE from 'three';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Text, Image } from '@react-three/drei';
+import { useRef, useState } from 'react';
+import { Vector3 } from 'three';
 import './Lanyard.css';
 
-extend({ MeshLineGeometry, MeshLineMaterial });
+// ID Card Component
+function IDCard({ photoUrl = null }) {
+  const cardRef = useRef();
+  const [isDragging, setIsDragging] = useState(false);
+  const [velocity, setVelocity] = useState(new Vector3(0, 0, 0));
 
-// Exact ReactBits Lanyard component structure
-export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true }) {
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  useFrame((state) => {
+    if (!cardRef.current) return;
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    // Apply gravity and damping for realistic swing
+    const damping = 0.95;
+    const gravity = -0.002;
+
+    velocity.y += gravity;
+    velocity.multiplyScalar(damping);
+
+    // Update position based on velocity
+    cardRef.current.position.add(velocity);
+
+    // Constrain to rope length (simple pendulum)
+    const ropeLength = 3;
+    const anchorPoint = new Vector3(0, 2, 0);
+    const currentPos = cardRef.current.position;
+    const distance = currentPos.distanceTo(anchorPoint);
+
+    if (distance > ropeLength) {
+      const direction = currentPos.clone().sub(anchorPoint).normalize();
+      cardRef.current.position.copy(anchorPoint.clone().add(direction.multiplyScalar(ropeLength)));
+      velocity.multiplyScalar(0.8);
+    }
+
+    // Mouse interaction influence
+    if (!isDragging) {
+      const mouseX = state.pointer.x * 2;
+      const mouseY = state.pointer.y * 2;
+      const influence = 0.002;
+      
+      velocity.x += (mouseX - currentPos.x) * influence;
+      velocity.y += (mouseY - currentPos.y) * influence * 0.5;
+    }
+
+    // Gentle rotation based on swing
+    cardRef.current.rotation.z = velocity.x * 0.5;
+    cardRef.current.rotation.x = velocity.y * 0.3;
+  });
+
+  const handlePointerDown = (e) => {
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handlePointerUp = () => {
+    setIsDragging(false);
+  };
 
   return (
-    <section className="lanyard-section" id="footer">
-      <div className="lanyard-wrapper">
-        <Canvas
-          camera={{ position: position, fov: fov }}
-          dpr={[1, isMobile ? 1.5 : 2]}
-          gl={{ alpha: transparent }}
-          onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
-        >
-          <ambientLight intensity={Math.PI} />
-          <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-            <Band isMobile={isMobile} />
-          </Physics>
-          <Environment blur={0.75}>
-            <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-            <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-            <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-            <Lightformer intensity={10} color="white" position={[-10, 0, 14]} rotation={[0, Math.PI / 2, Math.PI / 3]} scale={[100, 10, 1]} />
-          </Environment>
-        </Canvas>
-      </div>
-      
-      {/* CONTENT FIX: Meet the Developer section with complete info */}
-      <div className="developer-section">
-        <h3 className="developer-title">Meet the Developer</h3>
-        <p className="developer-name">Justin</p>
-        <p className="developer-role">Creative Frontend Engineer</p>
-        <p className="developer-tagline">Building immersive web experiences with React, Three.js & GSAP</p>
-      </div>
-    </section>
+    <group
+      ref={cardRef}
+      position={[0, -1, 0]}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+    >
+      {/* Rope segments */}
+      <mesh position={[0, 1.5, 0]}>
+        <cylinderGeometry args={[0.015, 0.015, 3, 8]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+
+      {/* Metal clasp */}
+      <mesh position={[0, 1.4, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <torusGeometry args={[0.08, 0.02, 8, 16]} />
+        <meshStandardMaterial color="#444444" metalness={0.9} roughness={0.1} />
+      </mesh>
+
+      {/* Card body - white background */}
+      <mesh castShadow receiveShadow>
+        <boxGeometry args={[1.5, 2.1, 0.05]} />
+        <meshStandardMaterial color="#ffffff" />
+      </mesh>
+
+      {/* Photo circle placeholder */}
+      <mesh position={[0, 0.45, 0.03]}>
+        <circleGeometry args={[0.5, 32]} />
+        <meshStandardMaterial color={photoUrl ? "#666666" : "#e0e0e0"} />
+      </mesh>
+
+      {/* Optional: Load custom photo */}
+      {photoUrl && (
+        <Image
+          url={photoUrl}
+          position={[0, 0.45, 0.04]}
+          scale={[1, 1]}
+          transparent
+          opacity={1}
+        />
+      )}
+
+      {/* "HELLO!" text */}
+      <Text
+        position={[0, -0.15, 0.03]}
+        fontSize={0.28}
+        color="#1a1a1a"
+        anchorX="center"
+        anchorY="middle"
+        font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff"
+        fontWeight="900"
+      >
+        HELLO!
+      </Text>
+
+      {/* Black badge with text */}
+      <mesh position={[0, -0.65, 0.03]}>
+        <planeGeometry args={[1.2, 0.22]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+
+      <Text
+        position={[0, -0.65, 0.04]}
+        fontSize={0.11}
+        color="#ffffff"
+        anchorX="center"
+        anchorY="middle"
+        font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff"
+        fontWeight="700"
+        letterSpacing={0.02}
+      >
+        I'M REACT BITS
+      </Text>
+
+      {/* Card border/edge */}
+      <mesh position={[0, 0, -0.001]}>
+        <boxGeometry args={[1.5, 2.1, 0.001]} />
+        <meshStandardMaterial color="#e0e0e0" />
+      </mesh>
+    </group>
   );
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
-  const band = useRef();
-  const fixed = useRef();
-  const j1 = useRef();
-  const j2 = useRef();
-  const j3 = useRef();
-  const card = useRef();
-  
-  const vec = new THREE.Vector3();
-  const ang = new THREE.Vector3();
-  const rot = new THREE.Vector3();
-  const dir = new THREE.Vector3();
-  
-  const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
-  
-  const [curve] = useState(
-    () => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
-  );
-  const [dragged, drag] = useState(false);
-  const [hovered, hover] = useState(false);
-
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
-  useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.5, 0]]);
-
-  useEffect(() => {
-    if (hovered) {
-      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
-      return () => void (document.body.style.cursor = 'auto');
-    }
-  }, [hovered, dragged]);
-
-  useFrame((state, delta) => {
-    if (dragged) {
-      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
-      dir.copy(vec).sub(state.camera.position).normalize();
-      vec.add(dir.multiplyScalar(state.camera.position.length()));
-      [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
-      card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
-    }
-    if (fixed.current) {
-      [j1, j2].forEach(ref => {
-        if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
-        const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
-        ref.current.lerped.lerp(ref.current.translation(), delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)));
-      });
-      curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
-      curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(isMobile ? 16 : 32));
-      ang.copy(card.current.angvel());
-      rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
-    }
-  });
-
-  curve.curveType = 'chordal';
-
+// Main Lanyard Component
+export default function Lanyard({ photoUrl = null }) {
   return (
-    <>
-      <group position={[0, 4, 0]}>
-        <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
-          <BallCollider args={[0.1]} />
-        </RigidBody>
-        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
-          <BallCollider args={[0.1]} />
-        </RigidBody>
-        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
-          <BallCollider args={[0.1]} />
-        </RigidBody>
-        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
-          <CuboidCollider args={[0.8, 1.125, 0.01]} />
-          <group
-            scale={2.25}
-            position={[0, -1.2, -0.05]}
-            onPointerOver={() => hover(true)}
-            onPointerOut={() => hover(false)}
-            onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
-            onPointerDown={e => (
-              e.target.setPointerCapture(e.pointerId),
-              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
-            )}
-          >
-            {/* ID Card base */}
-            <mesh>
-              <boxGeometry args={[0.7, 1, 0.02]} />
-              <meshPhysicalMaterial color="#111111" metalness={0.4} roughness={0.6} clearcoat={isMobile ? 0 : 0.5} />
-            </mesh>
-            
-            {/* CONTENT FIX: Photo area with initial placeholder */}
-            <mesh position={[0, 0.25, 0.02]}>
-              <circleGeometry args={[0.15, 32]} />
-              <meshStandardMaterial color="#444444" />
-            </mesh>
-            <mesh position={[0, 0.25, 0.03]}>
-              <ringGeometry args={[0.14, 0.15, 32]} />
-              <meshStandardMaterial color="#ff1744" />
-            </mesh>
-            
-            {/* CONTENT FIX: Name bar - "JUSTIN" */}
-            <mesh position={[0, 0, 0.02]}>
-              <planeGeometry args={[0.55, 0.12]} />
-              <meshStandardMaterial color="#ff1744" />
-            </mesh>
-            
-            {/* CONTENT FIX: Role bar - "Creative Frontend Engineer" */}
-            <mesh position={[0, -0.18, 0.02]}>
-              <planeGeometry args={[0.6, 0.08]} />
-              <meshStandardMaterial color="#ffffff" opacity={0.9} transparent />
-            </mesh>
-            
-            {/* CONTENT FIX: Tagline bar - smaller text area */}
-            <mesh position={[0, -0.32, 0.02]}>
-              <planeGeometry args={[0.55, 0.05]} />
-              <meshStandardMaterial color="#666666" opacity={0.7} transparent />
-            </mesh>
-            {/* Clip */}
-            <mesh position={[0, 0.55, 0]}>
-              <boxGeometry args={[0.15, 0.1, 0.03]} />
-              <meshStandardMaterial color="#666666" metalness={0.9} roughness={0.1} />
-            </mesh>
-          </group>
-        </RigidBody>
-      </group>
-      <mesh ref={band}>
-        <meshLineGeometry />
-        <meshLineMaterial color="#ff1744" depthTest={false} resolution={isMobile ? [1000, 2000] : [1000, 1000]} lineWidth={1} />
-      </mesh>
-    </>
+    <section className="lanyard-section">
+      <div className="developer-section">
+        <div className="developer-title">Meet the Developer</div>
+        <h2 className="developer-name">Justin</h2>
+        <p className="developer-role">Full Stack Developer</p>
+        <p className="developer-tagline">"Building beautiful experiences, one line of code at a time"</p>
+      </div>
+
+      <div className="lanyard-wrapper">
+        <Canvas
+          shadows
+          camera={{ position: [0, 0, 6], fov: 40 }}
+          style={{ background: 'transparent' }}
+        >
+          {/* Lighting setup */}
+          <ambientLight intensity={0.6} />
+          <directionalLight
+            position={[5, 8, 5]}
+            intensity={1.2}
+            castShadow
+            shadow-mapSize={[2048, 2048]}
+            shadow-camera-far={50}
+            shadow-camera-left={-10}
+            shadow-camera-right={10}
+            shadow-camera-top={10}
+            shadow-camera-bottom={-10}
+          />
+          <pointLight position={[-5, 5, -5]} intensity={0.3} color="#ffffff" />
+          <pointLight position={[5, -5, 5]} intensity={0.2} color="#ff1744" />
+
+          {/* Floor shadow catcher (invisible) */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3, 0]} receiveShadow>
+            <planeGeometry args={[20, 20]} />
+            <shadowMaterial transparent opacity={0.15} />
+          </mesh>
+
+          {/* ID Card with physics */}
+          <IDCard photoUrl={photoUrl} />
+        </Canvas>
+      </div>
+    </section>
   );
 }

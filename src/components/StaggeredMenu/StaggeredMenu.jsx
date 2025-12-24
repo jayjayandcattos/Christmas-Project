@@ -4,16 +4,14 @@ import './StaggeredMenu.css';
 
 const menuItems = [
   { label: 'Home', href: '#hero' },
+  { label: 'Stats', href: '#stats' },
   { label: 'Gallery', href: '#gallery' },
-  { label: 'Experience', href: '#dome' },
-  { label: 'Countdown', href: '#countdown' },
-  { label: 'Credits', href: '#footer' },
+  { label: 'Memories', href: '#polaroids' },
+  { label: 'Dome', href: '#dome' },
 ];
 
 const socials = [
-  { label: 'GitHub', href: 'https://github.com' },
-  { label: 'Twitter', href: 'https://twitter.com' },
-  { label: 'LinkedIn', href: 'https://linkedin.com' },
+  { label: 'GitHub', href: 'https://github.com/jayjayandcattos' },
 ];
 
 export default function StaggeredMenu({ lenis }) {

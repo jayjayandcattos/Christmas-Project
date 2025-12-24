@@ -2,12 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 import Aurora from './components/Aurora/Aurora';
 import CircularGallery from './components/CircularGallery/CircularGallery';
 import DomeGallery from './components/DomeGallery/DomeGallery';
 import CurvedLoop from './components/CurvedLoop/CurvedLoop';
-import Lanyard from './components/Lanyard/Lanyard';
+import YearStats from './components/YearStats/YearStats';
+import PolaroidGallery from './components/PolaroidGallery/PolaroidGallery';
+import SnowCursor from './components/SnowCursor/SnowCursor';
 import StaggeredMenu from './components/StaggeredMenu/StaggeredMenu';
 
 import './App.css';
@@ -30,8 +34,16 @@ function App() {
 
     setLenis(lenisInstance);
     lenisInstance.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenisInstance.raf(time * 1000));
+    gsap.ticker.add((time) => lenisInstance. raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
+
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 100,
+    });
 
     return () => {
       lenisInstance.destroy();
@@ -53,7 +65,7 @@ function App() {
       );
     }
 
-    // CircularGallery scroll-triggered opacity
+    // CircularGallery scroll-triggered
     if (galleryRef.current) {
       gsap.fromTo(galleryRef.current,
         { opacity: 0, y: 100 },
@@ -96,6 +108,9 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Snow Cursor Trail */}
+      <SnowCursor />
+      
       {/* Candy Cane Aurora Background */}
       <Aurora 
         colorStops={['#dc2626', '#ffffff', '#dc2626']}
@@ -108,26 +123,29 @@ function App() {
       
       {/* HERO SECTION */}
       <section ref={heroRef} className="hero-section" id="hero">
-        <div className="hero-content">
+        <div className="hero-content" data-aos="zoom-in" data-aos-duration="1500">
           <h1 className="hero-title">
-            <span className="hero-line">Christmas</span>
-            <span className="hero-line hero-year">2024</span>
+            <span className="hero-line" data-aos="fade-right" data-aos-delay="200">Christmas</span>
+            <span className="hero-line hero-year" data-aos="fade-left" data-aos-delay="400">2024</span>
           </h1>
-          <p className="hero-subtitle">A Year of Memories</p>
+          <p className="hero-subtitle" data-aos="fade-up" data-aos-delay="600">A Year Worth Remembering</p>
         </div>
       </section>
 
-      {/* Festive Divider */}
+      {/* YEAR STATS - Spotify Wrapped Style */}
+      <YearStats />
+
+      {/* Divider */}
       <div className="divider-section">
         <CurvedLoop 
           marqueeText="✦ Memories ✦ Moments ✦ Magic ✦ " 
-          speed={1}
+          speed={1.2}
           curveAmount={50}
         />
       </div>
 
       {/* CIRCULAR GALLERY */}
-      <section ref={galleryRef} className="section" id="gallery">
+      <section ref={galleryRef} className="section" id="gallery" data-aos="fade-up">
         <CircularGallery 
           bend={2}
           textColor="#ff1744"
@@ -136,18 +154,30 @@ function App() {
         />
       </section>
 
-      {/* Festive Divider */}
+      {/* Divider */}
       <div className="divider-section">
         <CurvedLoop 
-          marqueeText="✦ Reflections ✦ Adventures ✦ Celebrations ✦ " 
-          speed={0.8}
+          marqueeText="✦ Your Story ✦ Your Moments ✦ " 
+          speed={0.9}
           curveAmount={60}
           direction="right"
         />
       </div>
 
+      {/* POLAROID GALLERY */}
+      <PolaroidGallery />
+
+      {/* Divider */}
+      <div className="divider-section">
+        <CurvedLoop 
+          marqueeText="✦ Reflections ✦ Adventures ✦ Celebrations ✦ " 
+          speed={0.8}
+          curveAmount={40}
+        />
+      </div>
+
       {/* DOME GALLERY */}
-      <section ref={domeWrapperRef} className="section" id="dome">
+      <section ref={domeWrapperRef} className="section" id="dome" data-aos="zoom-in">
         <DomeGallery 
           overlayBlurColor="#000000"
           imageBorderRadius="8px"
@@ -156,18 +186,6 @@ function App() {
           fit={0.6} 
         />
       </section>
-
-      {/* Festive Divider */}
-      <div className="divider-section">
-        <CurvedLoop 
-          marqueeText="✦ Meet the Developer ✦ " 
-          speed={0.6}
-          curveAmount={40}
-        />
-      </div>
-
-      {/* LANYARD - Standalone premium section */}
-      <Lanyard />
     </div>
   );
 }

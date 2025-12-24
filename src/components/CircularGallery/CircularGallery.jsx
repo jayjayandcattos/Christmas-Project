@@ -142,15 +142,7 @@ class Media {
         }
 
         void main() {
-          vec2 ratio = vec2(
-            min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
-            min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
-          );
-          vec2 uv = vec2(
-            vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
-            vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
-          );
-          vec4 color = texture2D(tMap, uv);
+          vec4 color = texture2D(tMap, vUv);
           float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
           float edgeSmooth = 0.002;
           float alpha = 1.0 - smoothstep(-edgeSmooth, edgeSmooth, d);
@@ -269,12 +261,16 @@ class GalleryApp {
   }
   createMedias(items, bend = 1, textColor, borderRadius, font) {
     const defaultItems = [
-      { image: 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=800', text: 'Winter Joy' },
-      { image: 'https://images.unsplash.com/photo-1512389142860-9c449e58a814?w=800', text: 'Cozy Nights' },
-      { image: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=800', text: 'Warm Lights' },
-      { image: 'https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=800', text: 'Family Time' },
-      { image: 'https://images.unsplash.com/photo-1545622783-b3e021430fee?w=800', text: 'Festive Cheer' },
-      { image: 'https://images.unsplash.com/photo-1513297887119-d46091b24bfa?w=800', text: 'Snow Dreams' },
+      { image: '/yearend (1).jpg', text: '2/14' },
+      { image: '/yearend (8).jpg', text: 'MPL' },
+      { image: '/yearend (14).jpg', text: '???' },
+      { image: '/yearend (3).jpg', text: 'CATTOS!' },
+      { image: '/yearend (19).jpg', text: 'Pre-Defense Pose' },
+      { image: '/yearend (17).jpg', text: 'Samgyup after Exam' },
+      { image: '/yearend (6).jpg', text: 'ANTIPS 2K25' },
+      { image: '/yearend (21).jpg', text: 'LabGuard Team' },
+      { image: '/yearend (10).jpg', text: 'PAKYU' },
+      { image: '/yearend (16).jpg', text: 'Pre-Exam Posture' },
     ];
     const galleryItems = items && items.length ? items : defaultItems;
     this.mediasImages = galleryItems.concat(galleryItems);

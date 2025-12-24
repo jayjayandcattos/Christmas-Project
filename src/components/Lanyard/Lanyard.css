@@ -1,82 +1,218 @@
-/* Lanyard - SIZE + CONTENT FIX: Larger lanyard with ID content */
-
-/* SIZE FIX: Increased from min-height 100vh to ensure visibility, scaled up */
 .lanyard-section {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #000000;
+  background: var(--candy-black);
   position: relative;
-  padding: 4rem 0; /* Added padding for breathing room */
+  padding: 4rem 2rem;
+  overflow: hidden;
 }
 
-/* SIZE FIX: Larger canvas area, transform scale for visual size */
-.lanyard-wrapper {
-  position: relative;
-  z-index: 0;
-  width: 100%;
-  height: 70vh; /* SIZE FIX: Increased from 60vh to 70vh */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: scale(1.5); /* SIZE FIX: 50% larger visual scale */
-  transform-origin: center;
+/* CANDY CANE DIAGONAL STRIPES BACKGROUND */
+.lanyard-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 80px,
+    rgba(220, 38, 38, 0.03) 80px,
+    rgba(220, 38, 38, 0.03) 160px
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
-/* Meet the Developer section styling */
+/* FLOATING RED/WHITE GRADIENT ORBS */
+.lanyard-section::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--candy-red-600), transparent);
+  filter: blur(100px);
+  opacity: 0.2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: float 10s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Developer section with glassmorphism */
 .developer-section {
   text-align: center;
-  padding: 3rem 2rem 2rem; /* Increased top padding */
-  z-index: 1;
-  max-width: 600px;
+  padding: 3rem 2rem;
+  z-index: 10;
+  max-width: 700px;
+  
+  /* Glassmorphism card */
+  background: var(--glass-white);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-candy);
+  margin-bottom: 2rem;
+  
+  /* iOS spring entrance */
+  animation: springIn 0.8s var(--spring-bounce) forwards;
 }
 
 .developer-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--candy-red-600);
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.3em;
   margin-bottom: 1rem;
+  
+  /* Candy cane gradient text */
+  background: var(--gradient-red-white);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .developer-name {
-  font-size: 2.5rem; /* Increased from 2rem */
-  font-weight: 700;
-  font-family: 'Syne', sans-serif;
-  color: #ffffff;
-  margin-bottom: 0.5rem;
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 900;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 0.75rem;
+  
+  /* Candy cane gradient */
+  background: var(--gradient-candy-cane);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease infinite;
+  
+  /* Glow effect */
+  filter: drop-shadow(0 0 30px rgba(220, 38, 38, 0.5));
+  
+  /* iOS spring */
+  animation: springIn 0.8s var(--spring-bounce) 0.2s backwards,
+             gradient-shift 3s ease infinite;
 }
 
 .developer-role {
-  font-size: 1.25rem; /* Increased from 1rem */
-  color: #ff1744;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  color: var(--candy-white);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
 }
 
 .developer-tagline {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--candy-white-soft);
   font-style: italic;
   line-height: 1.6;
+  font-weight: 300;
 }
 
-@media (max-width: 768px) {
-  .lanyard-wrapper {
-    transform: scale(1.2); /* Smaller scale on mobile */
-    height: 60vh;
+/* Canvas wrapper with glow */
+.lanyard-wrapper {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  
+  /* Glassmorphism background */
+  background: var(--glass-red);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 40px;
+  border: 2px solid rgba(220, 38, 38, 0.2);
+  padding: 2rem;
+  box-shadow: 
+    var(--shadow-red-glow),
+    var(--shadow-premium);
+    
+  /* iOS spring entrance */
+  animation: springIn 1s var(--spring-bounce) 0.4s backwards;
+}
+
+/* Canvas with smooth transitions */
+.lanyard-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  outline: none;
+  border-radius: 20px;
+  
+  /* iOS smooth transition */
+  transition: transform var(--duration-normal) var(--spring-smooth);
+}
+
+.lanyard-wrapper:hover canvas {
+  transform: scale(1.02);
+}
+
+/* CANDY CANE BORDER ANIMATION */
+@keyframes border-glow {
+  0%, 100% {
+    border-color: rgba(220, 38, 38, 0.2);
+    box-shadow: 
+      0 0 20px rgba(220, 38, 38, 0.3),
+      var(--shadow-premium);
+  }
+  50% {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 
+      0 0 40px rgba(255, 255, 255, 0.4),
+      var(--shadow-premium);
   }
 }
 
-/*
-LANYARD SIZE + CONTENT FIXES:
-1. Increased canvas height: 70vh (was 60vh)
-2. Added transform: scale(1.5) for 50% larger visual size
-3. Added padding to section
-4. Increased font sizes in developer section
-5. Added tagline field
-6. Maintained ReactBits physics animation (no internal changes)
-*/
+.lanyard-wrapper {
+  animation: springIn 1s var(--spring-bounce) 0.4s backwards,
+             border-glow 3s ease-in-out infinite;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .lanyard-section {
+    padding: 2rem 1rem;
+  }
+  
+  .developer-section {
+    padding: 2rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .lanyard-wrapper {
+    height: 60vh;
+    min-height: 400px;
+    padding: 1rem;
+    border-radius: 20px;
+  }
+  
+  .developer-name {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+}
+
+/* iOS HOVER EFFECTS */
+.developer-section {
+  transition: transform var(--duration-fast) var(--spring-smooth);
+  cursor: pointer;
+}
+
+.developer-section:hover {
+  transform: scale(1.02) translateY(-4px);
+}

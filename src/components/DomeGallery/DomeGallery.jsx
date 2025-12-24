@@ -3,34 +3,28 @@ import { useGesture } from '@use-gesture/react';
 import './DomeGallery.css';
 
 const DEFAULT_IMAGES = [
-  {
-    src: 'https://images.unsplash.com/photo-1755331039789-7e5680e26e8f?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    alt: 'Abstract art'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1755569309049-98410b94f66d?q=80&w=772&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    alt: 'Modern sculpture'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1755497595318-7e5e3523854f?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    alt: 'Digital artwork'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1755353985163-c2a0fe5ac3d8?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    alt: 'Contemporary art'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1745965976680-d00be7dc0377?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    alt: 'Geometric pattern'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1752588975228-21f44630bb3c?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    alt: 'Textured surface'
-  },
-  {
-    src: 'https://pbs.twimg.com/media/Gyla7NnXMAAXSo_?format=jpg&name=large',
-    alt: 'Social media image'
-  }
+  { src: '/yearend (1).jpg', alt: 'Memory 1' },
+  { src: '/yearend (5).jpg', alt: 'Memory 5' },
+  { src: '/yearend (12).jpg', alt: 'Memory 12' },
+  { src: '/yearend (8).jpg', alt: 'Memory 8' },
+  { src: '/yearend (15).jpg', alt: 'Memory 15' },
+  { src: '/yearend (3).jpg', alt: 'Memory 3' },
+  { src: '/yearend (19).jpg', alt: 'Memory 19' },
+  { src: '/yearend (7).jpg', alt: 'Memory 7' },
+  { src: '/yearend (22).jpg', alt: 'Memory 22' },
+  { src: '/yearend (11).jpg', alt: 'Memory 11' },
+  { src: '/yearend (16).jpg', alt: 'Memory 16' },
+  { src: '/yearend (4).jpg', alt: 'Memory 4' },
+  { src: '/yearend (20).jpg', alt: 'Memory 20' },
+  { src: '/yearend (9).jpg', alt: 'Memory 9' },
+  { src: '/yearend (14).jpg', alt: 'Memory 14' },
+  { src: '/yearend (2).jpg', alt: 'Memory 2' },
+  { src: '/yearend (18).jpg', alt: 'Memory 18' },
+  { src: '/yearend (6).jpg', alt: 'Memory 6' },
+  { src: '/yearend (21).jpg', alt: 'Memory 21' },
+  { src: '/yearend (10).jpg', alt: 'Memory 10' },
+  { src: '/yearend (17).jpg', alt: 'Memory 17' },
+  { src: '/yearend (13).jpg', alt: 'Memory 13' },
 ];
 
 const DEFAULTS = {

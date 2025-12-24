@@ -35,7 +35,7 @@ function createTextTexture(gl, text, font = 'bold 30px sans-serif', color = 'whi
 }
 
 class Title {
-  constructor({ gl, plane, renderer, text, textColor = '#ffffff', font = '30px sans-serif' }) {
+  constructor({ gl, plane, renderer, text, textColor = '#ffffff', font = '600 30px Outfit' }) {
     this.gl = gl;
     this.plane = plane;
     this.renderer = renderer;
@@ -367,7 +367,7 @@ export default function CircularGallery({
   bend = 3,
   textColor = '#ffffff',
   borderRadius = 0.05,
-  font = 'bold 30px Inter',
+  font = '600 30px Outfit',
   scrollSpeed = 2,
   scrollEase = 0.05
 }) {

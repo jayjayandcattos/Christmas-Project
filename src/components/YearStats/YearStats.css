@@ -65,41 +65,33 @@
 }
 
 .stat-card {
-  background: var(--glass-white);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 30px;
-  padding: 3rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 40px;
+  padding: 4rem 2rem;
   position: relative;
   overflow: hidden;
-  animation: statCardFloat 0.8s var(--spring-bounce) backwards;
-  transition: all var(--duration-normal) var(--spring-smooth);
+  animation: statCardFloat 1s var(--ease-ios) backwards;
+  transition: all var(--duration-normal) var(--ease-ios);
 }
 
-.stat-card::before {
+.stat-card::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(255, 255, 255, 0.1));
-  opacity: 0;
-  transition: opacity var(--duration-normal) ease;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(220, 38, 38, 0.1), transparent 70%);
   pointer-events: none;
 }
 
 .stat-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  border-color: rgba(220, 38, 38, 0.4);
+  transform: translateY(-12px);
+  border-color: rgba(220, 38, 38, 0.2);
+  background: rgba(255, 255, 255, 0.04);
   box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(220, 38, 38, 0.3);
-}
-
-.stat-card:hover::before {
-  opacity: 1;
+    0 40px 80px -20px rgba(0, 0, 0, 0.5),
+    0 0 50px rgba(220, 38, 38, 0.2);
 }
 
 @keyframes statCardFloat {

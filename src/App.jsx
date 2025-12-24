@@ -20,6 +20,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [lenis, setLenis] = useState(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const domeWrapperRef = useRef(null);
   const galleryRef = useRef(null);
   const heroRef = useRef(null);
@@ -33,14 +34,19 @@ function App() {
     });
 
     setLenis(lenisInstance);
-    lenisInstance.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenisInstance. raf(time * 1000));
+    lenisInstance.on('scroll', (e) => {
+      ScrollTrigger.update();
+      const progress = (e.scroll / (e.limit)) * 100;
+      setScrollProgress(progress);
+    });
+    
+    gsap.ticker.add((time) => lenisInstance.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 
     // Initialize AOS
     AOS.init({
-      duration: 1000,
-      easing: 'ease-out-cubic',
+      duration: 1200,
+      easing: 'ease-out-expo',
       once: true,
       offset: 100,
     });
@@ -108,6 +114,14 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Scroll Progress Bar */}
+      <div className="scroll-progress">
+        <div 
+          className="scroll-progress-bar" 
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
+      </div>
+
       {/* Snow Cursor Trail */}
       <SnowCursor />
       

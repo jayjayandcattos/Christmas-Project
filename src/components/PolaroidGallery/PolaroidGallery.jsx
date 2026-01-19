@@ -77,14 +77,25 @@ export default function PolaroidGallery() {
   return (
     <section className="polaroid-section" id="polaroids">
       <div className="polaroid-header">
-        <h2 className="polaroid-title">Your 2024 Memories</h2>
-        <p className="polaroid-subtitle">Click any polaroid to reveal the story</p>
+        <h2 
+          className="polaroid-title"
+          data-aos="fade-up"
+          data-aos-duration="1200"
+        >
+          Your 2024 Memories
+        </h2>
+        <p 
+          className="polaroid-subtitle"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          Click any polaroid to reveal the story
+        </p>
       </div>
 
       <div className="polaroid-grid">
         {memories.map((memory, index) => {
-          // Random Christmas decoration
-          const decorations = ['🎅', '🦌', '⛄', '🎄', '🍬'];
+          const decorations = ['🎅', '🦌', '⛄', '🎄', '🍬', '🎁', '❄️', '✨'];
           const decoration = decorations[index % decorations.length];
           
           return (
@@ -92,10 +103,11 @@ export default function PolaroidGallery() {
               key={memory.id}
               className="polaroid-card"
               onClick={() => openModal(memory)}
-              data-aos="flip-left"
-              data-aos-delay={index * 100}
+              data-aos="fade-up"
+              data-aos-delay={index * 80}
+              data-aos-duration="1000"
+              data-aos-anchor-placement="center-bottom"
             >
-              {/* Christmas decoration overlay */}
               <div className="polaroid-decoration">{decoration}</div>
               
               <div className="polaroid-image-wrapper">
@@ -106,7 +118,6 @@ export default function PolaroidGallery() {
                 <span className="polaroid-date">{memory.date}</span>
               </div>
               
-              {/* Tape effect */}
               <div className="polaroid-tape"></div>
             </div>
           );

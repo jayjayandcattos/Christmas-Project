@@ -48,12 +48,30 @@ export default function YearStats() {
   return (
     <section className="year-stats-section" id="stats">
       <div className="stats-content">
-        <h2 className="stats-title">Your 2024 in Numbers</h2>
-        <p className="stats-subtitle">A year worth celebrating</p>
+        <h2 
+          className="stats-title"
+          data-aos="fade-up"
+          data-aos-duration="1200"
+        >
+          Your 2024 in Numbers
+        </h2>
+        <p 
+          className="stats-subtitle"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          A year worth celebrating
+        </p>
         
         <div className="stats-grid">
           {stats.map((stat, index) => (
-            <div key={index} className="stat-card" style={{ animationDelay: `${index * 0.1}s` }}>
+            <div 
+              key={index} 
+              className="stat-card"
+              data-aos="fade-up"
+              data-aos-delay={200 + index * 100}
+              data-aos-duration="1000"
+            >
               <div className="stat-number-wrapper">
                 <span
                   ref={(el) => (statsRef.current[index] = el)}

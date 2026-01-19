@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;600;900&family=Playfair+Display:ital,wght@0,400;0,900;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;900&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap');
 
 :root {
-  /* CANDY CANE COLOR PALETTE 🍭 */
+  /* AWARD-WINNING COLOR PALETTE */
   --candy-red-600: #dc2626;
   --candy-red-700: #991b1b;
   --candy-red-800: #7f1d1d;
@@ -14,9 +14,9 @@
   --candy-gold: #fbbf24;
   --candy-gold-dark: #f59e0b;
   
-  --candy-black: #0a0a0a;
-  --candy-black-soft: #171717;
-  --candy-black-muted: #262626;
+  --candy-black: #050505;
+  --candy-black-soft: #0a0a0a;
+  --candy-black-muted: #111111;
   
   /* GRADIENTS */
   --gradient-candy-cane: linear-gradient(135deg, var(--candy-red-600), var(--candy-white), var(--candy-red-600));
@@ -25,27 +25,26 @@
   --gradient-radial-red: radial-gradient(circle, var(--candy-red-600), var(--candy-red-900));
   
   /* GLASSMORPHISM */
-  --glass-red: rgba(220, 38, 38, 0.08);
-  --glass-white: rgba(255, 255, 255, 0.05);
+  --glass-red: rgba(220, 38, 38, 0.05);
+  --glass-white: rgba(255, 255, 255, 0.03);
   --glass-blur: blur(24px);
   
   /* SHADOWS */
-  --shadow-red-glow: 0 0 50px rgba(220, 38, 38, 0.4);
-  --shadow-white-glow: 0 0 50px rgba(255, 255, 255, 0.3);
-  --shadow-candy: 0 25px 70px rgba(220, 38, 38, 0.25);
-  --shadow-premium: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+  --shadow-red-glow: 0 0 60px rgba(220, 38, 38, 0.3);
+  --shadow-white-glow: 0 0 60px rgba(255, 255, 255, 0.2);
+  --shadow-candy: 0 30px 80px rgba(220, 38, 38, 0.2);
+  --shadow-premium: 0 50px 120px -30px rgba(0, 0, 0, 0.8);
   
-  /* iOS SPRING ANIMATIONS */
-  --spring-smooth: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --spring-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --spring-soft: cubic-bezier(0.4, 0.0, 0.2, 1);
-  --ease-ios: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* CINEMATIC EASING */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
   
   /* TIMING */
   --duration-fast: 200ms;
   --duration-normal: 400ms;
-  --duration-slow: 600ms;
-  --duration-extra-slow: 1000ms;
+  --duration-slow: 800ms;
+  --duration-extra-slow: 1200ms;
 }
 
 * {
@@ -62,20 +61,21 @@ html {
 
 body {
   font-family: 'Outfit', sans-serif;
-  background: var(--candy-black);
+  background: #050505;
   color: var(--candy-white);
   overflow-x: hidden;
   position: relative;
 }
 
+/* Subtle grain texture */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 10000;
 }
 
 /* CANDY CANE STRIPE UTILITIES */
